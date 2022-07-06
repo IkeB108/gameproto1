@@ -5,7 +5,6 @@ function setup() {
   //canvas is automatically created by p5js
   let mySettings = {
     mobile_friendly_canvas: true,
-    three_finger_console: true,
     minimum_width_to_height_ratio: 13/8,
     maximum_width_to_height_ratio: 3/1,
   }
