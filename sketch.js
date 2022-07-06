@@ -89,8 +89,9 @@ function draw() {
     var mapy = (player.y * tileDisplaySize * -1) + height/2 + (tileDisplaySize/2)
     image( mapGraphic, mapx, mapy, w, h )
     
-    
-    updatePlayer()
+    if(!(onMobile && screen_is_vertical()) ){
+      updatePlayer()
+    }
     drawPlayer()
     
     if(!player_has_moved){
@@ -163,19 +164,21 @@ function updatePlayer(){
 }
 
 function cursorClick(buttonClicked){
-  if(currentScreen == "end")window.location = "https://forms.gle/5e7dApREHpn4duN36"
-  if(currentScreen == "play" && player_has_reached_house){
-    currentScreen = "end"
-  }
-  if(currentScreen == "start"){
-    currentScreen = "play";
+  if( !(onMobile && screen_is_vertical() ) ) {  
+    if(currentScreen == "end")window.location = "https://forms.gle/5e7dApREHpn4duN36"
+    if(currentScreen == "play" && player_has_reached_house){
+      currentScreen = "end"
+    }
+    if(currentScreen == "start"){
+      currentScreen = "play";
+    }
   }
 }
 
 function warnIfVerticalScreen(){
   if(onMobile && screen_is_vertical() ){
     if(currentScreen !== "loading"){
-      background(0,210)
+      background(0,200)
       var img = pixelText("Please rotate your device\nto be horizontal", fontSheets.basic)
       var w = width;
       var h = (w/img.width) * img.height
