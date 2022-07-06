@@ -175,7 +175,7 @@ function cursorClick(buttonClicked){
 function warnIfVerticalScreen(){
   if(onMobile && screen_is_vertical() ){
     if(currentScreen !== "loading"){
-      background(0,160)
+      background(0,210)
       var img = pixelText("Please rotate your device\nto be horizontal", fontSheets.basic)
       var w = width;
       var h = (w/img.width) * img.height
