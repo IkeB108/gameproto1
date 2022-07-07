@@ -5,6 +5,7 @@ function setup() {
   //canvas is automatically created by p5js
   let mySettings = {
     mobile_friendly_canvas: true,
+    three_finger_console: true,
     minimum_width_to_height_ratio: 13/8,
     maximum_width_to_height_ratio: 3/1,
   }
@@ -90,6 +91,9 @@ function draw() {
     
     if(!(onMobile && screen_is_vertical()) ){
       updatePlayer()
+      if(onMobile && icursor.pressed){
+        drawCursorArrow();
+      }
     }
     drawPlayer()
     
@@ -98,7 +102,7 @@ function draw() {
       else var t = "Press the\narrow keys\nto move"
     } else {
       if(!player_has_reached_house)
-      var t = "Find the\nyellow house"
+      var t = "Find the\ndoor to the\nyellow house"
       if(player_has_reached_house)
       var t = "The End.\nTap anywhere\nto continue"
     }
@@ -108,6 +112,7 @@ function draw() {
     tint(255, map( sin(frameCount/10), -1, 1, 100, 255) )
     image (img, width/2, height*(1/5), w, h)
     noTint()
+    
     
   }
   if(currentScreen == "end"){
@@ -125,11 +130,49 @@ function draw() {
     image (img, width/2, height/2, w, h)
   }
   warnIfVerticalScreen();
+  
+  
+}
+
+function drawCursorArrow(){
+  var x1 = icursor_at_press.x
+  var y1 = icursor_at_press.y
+  
+  var ix = icursor.x;
+  var iy = icursor.y;
+  if(directions[0] == "left")iy = icursor_at_press.y
+  if(directions[0] == "right")iy = icursor_at_press.y
+  if(directions[0] == "up")ix = icursor_at_press.x
+  if(directions[0] == "down")ix = icursor_at_press.x
+  
+  var x2 = map(0.65, 0, 1, icursor_at_press.x, ix)
+  var y2 = map(0.65, 0, 1, icursor_at_press.y, iy)
+  if(dist(x1, y1, icursor.x, icursor.y) >= width/10){
+    drawArrow(x1, y1, x2, y2)
+  }
+}
+
+function drawArrow(x1, y1, x2, y2){
+  stroke(255); strokeWeight(width/100)
+  line( x1, y1, x2, y2 ) //main line
+  var p1 = {x: x1, y: y1}
+  var p2 = {x: x2, y: y2}
+  var tip_size = width/35
+  var a = angleOf( p1, p2 )
+  var l1_a = a - 135;
+  var l2_a = a + 135;
+  var l1_p = {x: x2, y: y2 - tip_size }
+  var l2_p = {x: x2, y: y2 - tip_size }
+  l1_p = rotatePoint(l1_p, l1_a, p2 )
+  l2_p = rotatePoint(l2_p, l2_a, p2 )
+  line(p2.x, p2.y, l1_p.x, l1_p.y)
+  line(p2.x, p2.y, l2_p.x, l2_p.y)
+  noStroke();
 }
 
 function updatePlayer(){
   var moveValid = frameCount - player.timeOfMove >= 10
-  var directions = [];
+  directions = [];
   
   if(keyIsDown(UP_ARROW))directions.push("up")
   if(keyIsDown(DOWN_ARROW))directions.push("down")
